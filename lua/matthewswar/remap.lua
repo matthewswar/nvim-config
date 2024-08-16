@@ -1,0 +1,1 @@
+-- vim.keymap.set('n', '<leader>l', '<cmd>ToggleNeoColumn<cr>', { noremap = true, desc = '[H] Toggle NeoColumn' })
