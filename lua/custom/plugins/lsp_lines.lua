@@ -2,7 +2,7 @@ return {
   'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
   config = function()
     require('lsp_lines').setup()
-    vim.api.nvim_create_autocmd({ 'LspAttach' }, {
+    vim.api.nvim_create_autocmd({ 'BufEnter' }, {
       group = 'matthewswar-code',
       callback = function()
         vim.diagnostic.config({
@@ -12,8 +12,9 @@ return {
       end,
     })
 
-    vim.api.nvim_create_autocmd({ 'LspDetach' }, {
+    vim.api.nvim_create_autocmd({ 'BufEnter' }, {
       group = 'matthewswar-code',
+      pattern = { '*.gd' },
       callback = function()
         vim.diagnostic.config({
           virtual_text = true,
