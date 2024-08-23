@@ -1,4 +1,4 @@
--- local matthewswarGroup = vim.api.nvim_create_augroup('Matthewswar', {})
+local matthewswarGroup = vim.api.nvim_create_augroup('Matthewswar', {})
 
 -- vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
 --   group = matthewswarGroup,
@@ -15,3 +15,12 @@
 --     vim.opt.colorcolumn = ''
 --   end,
 -- })
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = matthewswarGroup,
+  callback = function(args)
+    if vim.lsp.inlay_hint then
+      vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+    end
+  end,
+})

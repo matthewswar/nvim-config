@@ -672,8 +672,15 @@ require('lazy').setup({
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
+      formatters = {
+        gdformat = {
+          args = { '-', '--use-spaces=4' },
+        },
+      },
       formatters_by_ft = {
         lua = { 'stylua' },
+        gdscript = { 'gdformat' },
+        rust = { 'rustfmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -909,9 +916,9 @@ require('lazy').setup({
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
+        additional_vim_regex_highlighting = { 'ruby', 'gdscript' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby', 'gdscript' } },
       incremental_selection = {
         enable = true,
         keymaps = {
