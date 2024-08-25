@@ -640,6 +640,19 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+          gopls = function()
+            require('lspconfig').gopls.setup({
+              settings = {
+                gopls = {
+                  ['ui.inlayhint.hints'] = {
+                    compositeLiteralFields = true,
+                    constantValues = true,
+                    parameterNames = true,
+                  },
+                },
+              },
+            })
+          end,
         },
         automatic_installation = true,
       })
