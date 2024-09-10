@@ -14,5 +14,8 @@ return {
         search_dirs = require('neoscopes').get_current_dirs(),
       })
     end, { desc = '[s]earch [S]coped find files' })
+    vim.keymap.set('n', '<leader>sSs', function()
+      require('neoscopes').select()
+    end, { desc = '[s]earch [S]cope [s]elect' })
   end,
 }
