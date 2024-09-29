@@ -292,6 +292,7 @@ require('lazy').setup({
       -- Document existing key chains
       require('which-key').add({
         { '<leader>c', group = '[C]ode' },
+        { '<leader>ct', group = '[C]ode [T]est' },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
@@ -494,7 +495,9 @@ require('lazy').setup({
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
           -- Find references for the word under your cursor.
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('gr', function()
+            require('telescope.builtin').lsp_references({ show_line = false })
+          end, '[G]oto [R]eferences')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
@@ -586,7 +589,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
+        clangd = {
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, -- Originally includes 'proto'
+        },
         gopls = {},
         -- pyright = {},
         rust_analyzer = {},
@@ -596,7 +601,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -683,7 +688,7 @@ require('lazy').setup({
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
         return {
-          timeout_ms = 500,
+          timeout_ms = 5000,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
@@ -696,6 +701,10 @@ require('lazy').setup({
         lua = { 'stylua' },
         gdscript = { 'gdformat' },
         rust = { 'rustfmt' },
+        typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        go = { 'goimports', 'gofmt' },
+        -- proto = { 'buf' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -834,6 +843,9 @@ require('lazy').setup({
         sidebars = 'transparent',
         floats = 'transparent',
       },
+      on_colors = function(colors)
+        colors.border = '#00a0a1'
+      end,
     },
     init = function()
       -- Load the colorscheme here.
