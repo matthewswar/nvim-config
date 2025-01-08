@@ -293,6 +293,7 @@ require('lazy').setup({
       require('which-key').add({
         { '<leader>c', group = '[C]ode' },
         { '<leader>ct', group = '[C]ode [T]est' },
+        { '<leader>ctd', group = '[C]ode [T]est [D]ebug' },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
@@ -688,7 +689,7 @@ require('lazy').setup({
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
         return {
-          timeout_ms = 5000,
+          timeout_ms = 7500,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
@@ -701,8 +702,8 @@ require('lazy').setup({
         lua = { 'stylua' },
         gdscript = { 'gdformat' },
         rust = { 'rustfmt' },
-        typescript = { 'prettier' },
-        typescriptreact = { 'prettier' },
+        typescript = { 'prettier', 'eslint_d' },
+        typescriptreact = { 'prettier', 'eslint_d' },
         go = { 'goimports', 'gofmt' },
         -- proto = { 'buf' },
         -- Conform can also run multiple formatters sequentially

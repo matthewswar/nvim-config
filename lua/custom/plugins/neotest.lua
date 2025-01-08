@@ -13,11 +13,16 @@ return {
       adapters = {
         require('neotest-golang')({
           go_test_args = { '-coverprofile=' .. vim.fn.getcwd() .. '/coverage.out' },
+          testify_enabled = true,
         }),
         require('neotest-jest')({}),
       },
       discovery = {
         enabled = false,
+        concurrent = 1,
+      },
+      running = {
+        concurrent = true,
       },
     })
 
@@ -86,6 +91,13 @@ return {
         local neotest = require('neotest')
         neotest.output_panel.clear()
         neotest.run.run()
+      end,
+      desc = '[n]earest test',
+    },
+    {
+      '<leader>ctdn',
+      function()
+        require('neotest').run.run({ suite = false, strategy = 'dap' })
       end,
       desc = '[n]earest test',
     },
