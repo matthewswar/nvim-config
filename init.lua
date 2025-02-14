@@ -619,6 +619,12 @@ require('lazy').setup({
             },
           },
         },
+
+        typos_lsp = {
+          init_options = {
+            diagnosticSeverity = 'Hint',
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed

@@ -116,5 +116,11 @@ return {
         project = '${workspaceFolder}',
       },
     }
+
+    vim.cmd('hi DapBreakpointColor guifg=#fa4848')
+    vim.fn.sign_define('DapBreakpoint', { text = '•', texthl = 'DapBreakpointColor' })
+
+    vim.cmd('hi DapStoppedColor guifg=#fafa00')
+    vim.fn.sign_define('DapStopped', { text = '→', texthl = 'DapStoppedColor' })
   end,
 }

@@ -1,5 +1,6 @@
 vim.opt.wrap = false
 vim.opt.undodir = os.getenv('HOME') .. '/.vim/undodir'
+vim.opt.spell = true
 
 vim.opt.incsearch = true
 
