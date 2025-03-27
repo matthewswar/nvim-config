@@ -102,6 +102,28 @@ return {
       desc = '[n]earest test',
     },
     {
+      '<leader>ctdf',
+      function()
+        local current_file_name = vim.api.nvim_buf_get_name(0)
+        local file_extension = '.go'
+        local file_suffix = '_test'
+        local test_file_suffix = file_suffix .. file_extension
+        local is_go_file = current_file_name:sub(-#file_extension) == file_extension
+        local is_go_test_file = current_file_name:sub(-#test_file_suffix) == test_file_suffix
+        if not is_go_file or is_go_test_file then
+          require('neotest').run.run({ vim.fn.expand('%'), strategy = 'dap', suite = false })
+          return
+        end
+
+        -- Non-test go file
+        local test_file_name = vim.fn.expand('%'):sub(0, -#file_extension - 1) .. '_test.go'
+        if vim.fn.filereadable(test_file_name) then
+          require('neotest').run.run({ test_file_name, strategy = 'dap', suite = false })
+        end
+      end,
+      desc = 'debug [f]ile',
+    },
+    {
       '<leader>cto',
       function()
         require('neotest').output_panel.toggle()
