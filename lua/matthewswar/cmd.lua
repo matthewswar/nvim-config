@@ -24,3 +24,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = matthewswarGroup,
+  pattern = { '*.js.tpl', '*.js.tmpl' },
+  callback = function()
+    vim.opt_local.filetype = 'javascript'
+  end,
+})

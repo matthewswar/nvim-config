@@ -102,6 +102,16 @@ return {
       },
     })
 
+    dap.adapters['pwa-node'] = {
+      type = 'server',
+      host = 'localhost',
+      port = '${port}',
+      executable = {
+        command = 'node',
+        args = { vim.call('stdpath', 'data') .. '/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js', '${port}' },
+      },
+    }
+
     dap.adapters.godot = {
       type = 'server',
       host = '127.0.0.1',

@@ -590,9 +590,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {
-          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, -- Originally includes 'proto'
-        },
+        -- clangd = {
+        --   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, -- Originally includes 'proto'
+        -- },
         gopls = {},
         -- pyright = {},
         rust_analyzer = {},
@@ -617,12 +617,6 @@ require('lazy').setup({
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
-          },
-        },
-
-        typos_lsp = {
-          init_options = {
-            diagnosticSeverity = 'Hint',
           },
         },
       }
@@ -695,7 +689,7 @@ require('lazy').setup({
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
         return {
-          timeout_ms = 7500,
+          timeout_ms = 60000,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
@@ -703,15 +697,20 @@ require('lazy').setup({
         gdformat = {
           args = { '-', '--use-spaces=4' },
         },
+        goimports = {
+          args = { '-local', 'git.corp.tanium.com' },
+        },
       },
       formatters_by_ft = {
         lua = { 'stylua' },
         gdscript = { 'gdformat' },
         rust = { 'rustfmt' },
         typescript = { 'prettier', 'eslint_d' },
+        javascript = { 'prettier', 'eslint_d' },
         typescriptreact = { 'prettier', 'eslint_d' },
         go = { 'goimports', 'gofmt' },
         -- proto = { 'buf' },
+        proto = { 'clang-format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -890,6 +889,17 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
+
+      require('mini.animate').setup({
+        cursor = {
+          enable = false,
+        },
+        scroll = {
+          timing = function(_, n)
+            return 10 / n
+          end,
+        },
+      })
 
       local map = require('mini.map')
       map.setup({

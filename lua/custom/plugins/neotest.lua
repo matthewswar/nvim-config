@@ -1,5 +1,6 @@
 return {
   'nvim-neotest/neotest',
+  commit = '52fca6717ef972113ddd6ca223e30ad0abb2800c',
   dependencies = {
     'nvim-neotest/nvim-nio',
     'nvim-lua/plenary.nvim',
@@ -15,7 +16,15 @@ return {
           go_test_args = { '-coverprofile=' .. vim.fn.getcwd() .. '/coverage.out' },
           testify_enabled = true,
         }),
-        require('neotest-jest')({}),
+        require('neotest-jest')({
+          jestConfigFile = function(file)
+            if string.find(file, '/packages/') then
+              return string.match(file, '(.-/[^/]+/)src') .. 'jest.config.ts'
+            end
+
+            return vim.fn.getcwd() .. '/jest.config.ts'
+          end,
+        }),
       },
       discovery = {
         enabled = false,
