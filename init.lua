@@ -645,10 +645,10 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            vim.lsp.config(server_name, server)
           end,
           gopls = function()
-            require('lspconfig').gopls.setup({
+            vim.lsp.config('gopls', {
               settings = {
                 gopls = {
                   ['ui.inlayhint.hints'] = {
@@ -663,7 +663,7 @@ require('lazy').setup({
         },
         automatic_installation = true,
       })
-      require('lspconfig').gdscript.setup({ capabilities = capabilities, settings = {} })
+      vim.lsp.config('gdscript', { capabilities = capabilities, settings = {} })
     end,
   },
 
@@ -907,6 +907,9 @@ require('lazy').setup({
           map.gen_integration.builtin_search(),
           map.gen_integration.gitsigns(),
           map.gen_integration.diagnostic(),
+        },
+        symbols = {
+          encode = map.gen_encode_symbols.dot('4x2'),
         },
       })
 
