@@ -316,7 +316,7 @@ require('lazy').setup({
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    branch = '0.1.x',
+    branch = 'master',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -701,7 +701,7 @@ require('lazy').setup({
           args = { '-', '--use-spaces=4' },
         },
         goimports = {
-          args = { '-local', 'git.corp.tanium.com' },
+          args = { '-local' },
         },
       },
       formatters_by_ft = {
@@ -941,58 +941,79 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    lazy = false,
     build = ':TSUpdate',
-    opts = {
-      ensure_installed = {
-        'bash',
-        'c',
-        'diff',
-        'html',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'query',
-        'vim',
-        'vimdoc',
-        'rust',
-        'go',
-        'gdscript',
-      },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby', 'gdscript' },
-      },
-      indent = { enable = true, disable = { 'ruby', 'gdscript' } },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = 'gnn',
-          node_incremental = 'grn',
-          scope_incremental = 'grc',
-          node_decremental = 'grm',
-        },
-      },
-    },
-    config = function(_, opts)
-      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+    config = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('tree-sitter-enable', { clear = true }),
+        callback = function(args)
+          local lang = vim.treesitter.language.get_lang(args.match)
+          if not lang then
+            return
+          end
 
-      ---@diagnostic disable-next-line: missing-fields
-      require('nvim-treesitter.configs').setup(opts)
+          if require('nvim-treesitter.parsers')[lang] ~= nil and not vim.treesitter.get_parser() then
+            require('nvim-treesitter').install(lang)
+          end
 
-      -- There are additional nvim-treesitter modules that you can use to interact
-      -- with nvim-treesitter. You should go explore a few and see what interests you:
-      --
-      --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-      --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+          if vim.treesitter.query.get(lang, 'highlights') then
+            vim.treesitter.start(args.buf)
+          end
+
+          if vim.treesitter.query.get(lang, 'indents') then
+            vim.opt_local.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
+          end
+
+          if vim.treesitter.query.get(lang, 'folds') then
+            vim.opt_local.foldmethod = 'expr'
+            vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+          end
+        end,
+      })
     end,
   },
+  -- {
+  --   'MeanderingProgrammer/treesitter-modules.nvim',
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter' },
+  --   opts = {
+  --     ensure_installed = {
+  --       'bash',
+  --       'c',
+  --       'diff',
+  --       'html',
+  --       'lua',
+  --       'luadoc',
+  --       'markdown',
+  --       'markdown_inline',
+  --       'query',
+  --       'vim',
+  --       'vimdoc',
+  --       'rust',
+  --       'go',
+  --       'gdscript',
+  --     },
+  --     -- Autoinstall languages that are not installed
+  --     auto_install = true,
+  --     highlight = {
+  --       enable = true,
+  --       -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
+  --       --  If you are experiencing weird indenting issues, add the language to
+  --       --  the list of additional_vim_regex_highlighting and disabled languages for indent.
+  --       additional_vim_regex_highlighting = { 'ruby', 'gdscript' },
+  --     },
+  --     indent = { enable = true, disable = { 'ruby', 'gdscript' } },
+  --     incremental_selection = {
+  --       enable = true,
+  --       keymaps = {
+  --         init_selection = 'gnn',
+  --         node_incremental = 'grn',
+  --         scope_incremental = 'grc',
+  --         node_decremental = 'grm',
+  --       },
+  --     },
+  --   },
+  -- },
   {
     'nvim-treesitter/nvim-treesitter-context',
     opts = {

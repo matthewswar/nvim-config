@@ -1,12 +1,23 @@
 return {
   'nvim-neotest/neotest',
-  commit = '52fca6717ef972113ddd6ca223e30ad0abb2800c',
   dependencies = {
     'nvim-neotest/nvim-nio',
     'nvim-lua/plenary.nvim',
     'antoinemadec/FixCursorHold.nvim',
-    'nvim-treesitter/nvim-treesitter',
-    'fredrikaverpil/neotest-golang',
+    {
+      'nvim-treesitter/nvim-treesitter',
+      branch = 'main',
+      build = function()
+        vim.cmd([[:TSUpdate go]])
+      end,
+    },
+    {
+      'fredrikaverpil/neotest-golang',
+      version = '*',
+      build = function()
+        vim.system({ 'go', 'install', 'gotest.tools/gotestsum@latest' }):wait()
+      end,
+    },
     'nvim-neotest/neotest-jest',
   },
   config = function()
@@ -15,6 +26,7 @@ return {
         require('neotest-golang')({
           go_test_args = { '-coverprofile=' .. vim.fn.getcwd() .. '/coverage.out' },
           testify_enabled = true,
+          runner = 'gotestsum',
         }),
         require('neotest-jest')({
           jestConfigFile = function(file)
