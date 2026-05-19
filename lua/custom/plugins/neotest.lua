@@ -19,6 +19,7 @@ return {
       end,
     },
     'nvim-neotest/neotest-jest',
+    'mrcjkb/rustaceanvim',
   },
   config = function()
     require('neotest').setup({
@@ -37,6 +38,7 @@ return {
             return vim.fn.getcwd() .. '/jest.config.ts'
           end,
         }),
+        require('rustaceanvim.neotest')({}),
       },
       discovery = {
         enabled = false,

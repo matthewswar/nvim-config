@@ -597,7 +597,7 @@ require('lazy').setup({
         -- },
         gopls = {},
         -- pyright = {},
-        rust_analyzer = {},
+        -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -607,7 +607,7 @@ require('lazy').setup({
         -- ts_ls = {},
         tsgo = {},
         --
-
+        basedpyright = {},
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -701,7 +701,7 @@ require('lazy').setup({
           args = { '-', '--use-spaces=4' },
         },
         goimports = {
-          args = { '-local' },
+          args = { '-local', '$FILENAME' },
         },
       },
       formatters_by_ft = {
@@ -714,6 +714,8 @@ require('lazy').setup({
         go = { 'goimports', 'gofmt' },
         -- proto = { 'buf' },
         proto = { 'clang-format' },
+        handlebars = { 'djlint' },
+        html = { 'djlint' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -939,37 +941,46 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    branch = 'main',
-    lazy = false,
-    build = ':TSUpdate',
+  -- { -- Highlight, edit, and navigate code
+  --   'nvim-treesitter/nvim-treesitter',
+  --   branch = 'main',
+  --   lazy = false,
+  --   build = ':TSUpdate',
+  --   config = function()
+  --     vim.api.nvim_create_autocmd('FileType', {
+  --       group = vim.api.nvim_create_augroup('tree-sitter-enable', { clear = true }),
+  --       callback = function(args)
+  --         local lang = vim.treesitter.language.get_lang(args.match)
+  --         if not lang then
+  --           return
+  --         end
+  --
+  --         if require('nvim-treesitter.parsers')[lang] ~= nil and not vim.treesitter.get_parser() then
+  --           require('nvim-treesitter').install(lang)
+  --         end
+  --
+  --         if vim.treesitter.query.get(lang, 'highlights') then
+  --           vim.treesitter.start(args.buf)
+  --         end
+  --
+  --         if vim.treesitter.query.get(lang, 'indents') then
+  --           vim.opt_local.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
+  --         end
+  --
+  --         if vim.treesitter.query.get(lang, 'folds') then
+  --           vim.opt_local.foldmethod = 'expr'
+  --           vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+  --         end
+  --       end,
+  --     })
+  --   end,
+  -- },
+  {
+    'romus204/tree-sitter-manager.nvim',
     config = function()
-      vim.api.nvim_create_autocmd('FileType', {
-        group = vim.api.nvim_create_augroup('tree-sitter-enable', { clear = true }),
-        callback = function(args)
-          local lang = vim.treesitter.language.get_lang(args.match)
-          if not lang then
-            return
-          end
-
-          if require('nvim-treesitter.parsers')[lang] ~= nil and not vim.treesitter.get_parser() then
-            require('nvim-treesitter').install(lang)
-          end
-
-          if vim.treesitter.query.get(lang, 'highlights') then
-            vim.treesitter.start(args.buf)
-          end
-
-          if vim.treesitter.query.get(lang, 'indents') then
-            vim.opt_local.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
-          end
-
-          if vim.treesitter.query.get(lang, 'folds') then
-            vim.opt_local.foldmethod = 'expr'
-            vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-          end
-        end,
+      require('tree-sitter-manager').setup({
+        auto_install = true,
+        highlight = true,
       })
     end,
   },
