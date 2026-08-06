@@ -32,3 +32,22 @@ vim.api.nvim_create_autocmd('BufEnter', {
     vim.opt_local.filetype = 'javascript'
   end,
 })
+
+-- Diagnostics as virtual lines (native since nvim 0.11; previously via the
+-- lsp_lines.nvim plugin), except gdscript which reads better with virtual
+-- text. vim.diagnostic.config is global, so flip it on buffer entry.
+vim.diagnostic.config({
+  virtual_text = false,
+  virtual_lines = true,
+})
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = matthewswarGroup,
+  callback = function()
+    local is_gdscript = vim.bo.filetype == 'gdscript'
+    vim.diagnostic.config({
+      virtual_text = is_gdscript,
+      virtual_lines = not is_gdscript,
+    })
+  end,
+})
