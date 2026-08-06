@@ -36,7 +36,19 @@ vim.api.nvim_create_autocmd('BufEnter', {
 -- Diagnostics as virtual lines (native since nvim 0.11; previously via the
 -- lsp_lines.nvim plugin), except gdscript which reads better with virtual
 -- text. vim.diagnostic.config is global, so flip it on buffer entry.
+-- The autocmd below only touches virtual_text/virtual_lines, so the other
+-- keys set here stick.
 vim.diagnostic.config({
+  severity_sort = true,
+  float = { border = 'rounded', source = 'if_many' },
+  signs = vim.g.have_nerd_font and {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '󰅚 ',
+      [vim.diagnostic.severity.WARN] = '󰀪 ',
+      [vim.diagnostic.severity.INFO] = '󰋽 ',
+      [vim.diagnostic.severity.HINT] = '󰌶 ',
+    },
+  } or {},
   virtual_text = false,
   virtual_lines = true,
 })
