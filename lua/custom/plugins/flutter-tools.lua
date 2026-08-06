@@ -4,11 +4,7 @@ return {
   dependencies = {
     'nvim-lua/plenary.nvim',
   },
-  opts = {
-    lsp = {
-      color = {
-        enabled = true,
-      },
-    },
-  },
+  -- NOTE: the old `lsp.color.enabled` option is deprecated; nvim 0.12's
+  -- native vim.lsp.document_color (enabled by default) handles it now.
+  opts = {},
 }
